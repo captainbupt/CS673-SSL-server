@@ -39,7 +39,7 @@ def login(data):
 		return statu,result
 	if not verify(username, password):
 		log.warning('login: unmatched username or password')
-		statu = constant.STATUS_INFORMATION_INVALID
+		statu = constant.STATUS_INFORMATION_UNMATCHED
 		return statu,result
 	return statu, getUserInfo(username)
 	
