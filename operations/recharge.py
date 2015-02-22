@@ -6,7 +6,7 @@ INFO_EXPIRE = 'expire'
 INFO_SN = 'securitynumber'
 INFO_AMOUNT = 'amount'
 
-def verify(username, password):
+def verify(userid, number, expire, securitynumber, amount):
 	if isinstance(username,str) and isinstance(password,str):
 		return False
 	return True
