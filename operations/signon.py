@@ -11,7 +11,8 @@ RESULT_RECORDS = 'records'
 RESULT_BALANCE = 'balance'
 
 def verify(username, password, nickname):
-	if isinstance(username,str) and isinstance(password,str) and isinstance(nickname,str):
+	if not (isinstance(username,unicode) and isinstance(password,unicode) \
+		and isinstance(nickname,unicode)):
 		return False
 	return True
 
@@ -31,18 +32,16 @@ def signon(data):
 	username = None
 	password = None
 	nickname = None
-	if INFO_USERNAME in data:
+	if INFO_USERNAME in data and INFO_PASSWORD in data and INFO_NICKNAME in data:
 		username = data[INFO_USERNAME]
-	if INFO_PASSWORD in data:
 		password = data[INFO_PASSWORD]
-	if INFO_NICKNAME in data:
 		nickname = data[INFO_NICKNAME]
-	if username is None or password is None or nickname is None:
-		log.warning('signon: missing username, password or nickname')
+	else:
+		log.warning('signon: missing parameters')
 		statu = constant.STATUS_PARAMETER_UNMATCHED
 		return statu,result
 	if not verify(username, password):
-		log.warning('signon: unmatched username or password')
+		log.warning('signon: information invalid')
 		statu = constant.STATUS_INFORMATION_INVALID
 		return statu,result
 	return statu, getUserInfo(username)

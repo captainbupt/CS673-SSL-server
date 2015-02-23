@@ -7,36 +7,36 @@ INFO_SN = 'securitynumber'
 INFO_AMOUNT = 'amount'
 
 def verify(userid, number, expire, securitynumber, amount):
-	if isinstance(username,str) and isinstance(password,str):
+	if not (isinstance(userid,unicode) and isinstance(number,unicode) \
+	and isinstance(expire,unicode) and isinstance(securitynumber,unicode) and isinstance(amount,float)):
 		return False
 	return True
 
-def getUserInfo(username):
-	result = {}
-	result[RESULT_USERID] = '0123456789'
-	result[RESULT_NICKNAME] = 'Bob'
-	result[RESULT_CREDIT] = 0
-	result[RESULT_RANK] = 0
-	result[RESULT_RECORDS] = ['0000000001','0000000002']
-	result[RESULT_BALANCE] = [12.34]
-	return result
+def addAmount(userid,amount):
+	return True
 
-def login(data):
+def recharge(data):
 	statu = constant.STATUS_SUCCESS
 	result = {}
-	username = None
-	password = None
-	if INFO_USERNAME in data:
-		username = data[INFO_USERNAME]
-	if INFO_PASSWORD in data:
-		password = data[INFO_PASSWORD]
-	if username is None or password is None:
-		log.warning('login: missing username or password')
+	userid = None
+	cardnumber = None
+	expire = None
+	sn = None
+	amount = None
+	if INFO_USERID in data and INFO_CARDNUMBER in data\
+	and INFO_EXPIRE in data and INFO_SN in data and INFO_AMOUNT in data:
+		userid = data[INFO_USERID]
+		cardnumber = data[INFO_CARDNUMBER]
+		expire = data[INFO_EXPIRE]
+		sn = data[INFO_SN]
+		amount = data[INFO_AMOUNT]
+	else:
+		log.warning('recharge: missing parameters')
 		statu = constant.STATUS_PARAMETER_UNMATCHED
 		return statu,result
-	if not verify(username, password):
-		log.warning('login: unmatched username or password')
+	if not verify(userid, number, expire, securitynumber, amount):
+		log.warning('recharge: information invalid')
 		statu = constant.STATUS_INFORMATION_INVALID
 		return statu,result
-	return statu, getUserInfo(username)
+	return statu, result
 	

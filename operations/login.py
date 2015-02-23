@@ -6,13 +6,12 @@ RESULT_USERID = 'userid'
 RESULT_NICKNAME = 'nickname'
 RESULT_CREDIT = 'credit'
 RESULT_RANK = 'rank'
-RESULT_RECORDS = 'records'
 RESULT_BALANCE = 'balance'
 
 def verify(username, password):
-	if isinstance(username,str) and isinstance(password,str):
-		return False
-	return True
+	if not (isinstance(username,unicode) and isinstance(password,unicode)):
+		return True
+	return False
 
 def getUserInfo(username):
 	result = {}
@@ -20,7 +19,6 @@ def getUserInfo(username):
 	result[RESULT_NICKNAME] = 'Bob'
 	result[RESULT_CREDIT] = 0
 	result[RESULT_RANK] = 0
-	result[RESULT_RECORDS] = ['0000000001','0000000002']
 	result[RESULT_BALANCE] = [12.34]
 	return result
 
@@ -29,16 +27,15 @@ def login(data):
 	result = {}
 	username = None
 	password = None
-	if INFO_USERNAME in data:
+	if INFO_USERNAME in data and INFO_PASSWORD in data:
 		username = data[INFO_USERNAME]
-	if INFO_PASSWORD in data:
 		password = data[INFO_PASSWORD]
-	if username is None or password is None:
-		log.warning('login: missing username or password')
+	else:
+		log.warning('login: missing parameters')
 		statu = constant.STATUS_PARAMETER_UNMATCHED
 		return statu,result
 	if not verify(username, password):
-		log.warning('login: unmatched username or password')
+		log.warning('login: information invalid')
 		statu = constant.STATUS_INFORMATION_INVALID
 		return statu,result
 	return statu, getUserInfo(username)
